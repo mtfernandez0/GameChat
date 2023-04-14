@@ -1,0 +1,4 @@
+.edit-profile{
+    display: grid;
+    grid-template-columns: 0.70fr 0.30fr;
+}

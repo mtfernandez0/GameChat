@@ -1,0 +1,75 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+    letter-spacing: 1px;
+    color: white;
+}
+
+.main-page {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 190px 1fr;
+}
+
+#title{
+    font-size: 30px;
+}
+
+#main-navbar{
+    padding: 0;
+}
+
+#main-navbar div{
+    background-color: rgb(36, 45, 53);
+    box-shadow: 0 0 5px 0 rgb(23, 47, 63);
+}
+
+.sidebar{
+    padding-left: 5px;
+    font-size: 1.2rem;
+
+    display: flex;
+    flex-direction: column;
+    font-size: 20px;
+}
+
+.sidebar a{
+    padding-left: 5px;
+    border-radius: 7px 7px;
+}
+
+#chat button{
+    border-radius: 7px 7px;
+    padding-left: 5px;
+    font-size: 20px;
+}
+
+.front-page{
+    margin: 0 15px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.front-page a{
+    color: white;
+    text-decoration: none;
+}
+
+.chat-users li a{
+    text-decoration: none;
+}
+
+.player-list{
+    margin-top: 10px;
+}
+
+.player-matchmaking{
+    display: grid;
+    grid-template-columns: 0.3fr 1fr 1fr;
+    justify-items: center;
+
+    justify-content: space-between;
+}

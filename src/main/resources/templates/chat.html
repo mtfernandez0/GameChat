@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<!--    <script th:src="@{/chat.js}"></script>-->
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            let username = /*[[${username}]]*/ 'default'
+            const url = "http://localhost:8080";
+            let stompClient;
+            console.log(username)
+            let socket = new SockJS(url + "/chat")
+
+            stompClient = Stomp.over(socket)
+            stompClient.connect({}, (frame) => {
+                console.log("Connected: " + frame)
+                console.log("Subscribing to chat with the user: " + username)
+                stompClient.subscribe("/user/" + username, (res) => {
+                    console.log("Response: " + res.body)
+                });
+            })
+            $('#request').on('click', () => {
+                let to = $("input[id='friendRequest']").val()
+                stompClient.send("/app/chat/" + to, {}, JSON.stringify({
+                    idReceiver: 2,
+                    fromLogin: 1,
+                    message: 'Hello from ' + username + ' to ' + to
+                }))
+            })
+        })
+    </script>
+</head>
+<body>
+    <div class="people-list">
+        <input id="friendRequest" type="text" placeholder="send">
+        <button id="request">Send friend request admin</button>
+    </div>
+</body>
+</html>
