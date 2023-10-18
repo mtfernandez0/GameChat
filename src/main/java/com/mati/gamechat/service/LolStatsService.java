@@ -1,13 +1,26 @@
 package com.mati.gamechat.service;
 
-import com.mati.gamechat.entity.LolStats;
+import com.mati.gamechat.entity.lol.LolStats;
+import com.mati.gamechat.repository.LolStatsRepository;
+import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+@Service
+public class LolStatsService {
+    private final LolStatsRepository lolStatsRepository;
 
-public interface LolStatsService {
-    Optional<LolStats> findByUserId(Long id);
+    public LolStatsService(LolStatsRepository lolStatsRepository) {
+        this.lolStatsRepository = lolStatsRepository;
+    }
 
-    LolStats save(LolStats stats);
+    public LolStats findByUserId(Long id) {
+        return lolStatsRepository.findByUserId(id);
+    }
 
-    void deleteById(Long id);
+    public LolStats save(LolStats stats) {
+        return lolStatsRepository.save(stats);
+    }
+
+    public void deleteById(Long id) {
+        lolStatsRepository.deleteById(id);
+    }
 }

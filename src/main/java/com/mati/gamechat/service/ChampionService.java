@@ -1,6 +1,6 @@
 package com.mati.gamechat.service;
 
-import com.mati.gamechat.entity.Champion;
+import com.mati.gamechat.entity.lol.Champion;
 
 import java.util.List;
 

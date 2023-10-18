@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor @NoArgsConstructor
 @Builder
 public class ChatMessage {
-    private Long id;
+    private Long idReceiver;
     private Long IdFrom;
     private String message;
 }

@@ -1,0 +1,23 @@
+server:
+    error:
+        include-stacktrace: never
+spring:
+    datasource:
+        password: ${PGSQL_MP}
+        url: jdbc:postgresql://localhost:5432/gamechat
+        username: ${PGSQL_MU}
+    jpa:
+        defer-datasource-initialization: true
+        hibernate:
+            ddl-auto: update
+    sql:
+        init:
+            mode: never
+apiLolUrl: .api.riotgames.com/lol
+apiTransmisionProtocol: https://
+apiUrlChampionMasteries: /champion-mastery/v4/champion-masteries/by-summoner/
+apiUrlLeague: /league/v4/entries/by-summoner/
+apiUrlSummoner: /summoner/v4/summoners/by-name/
+dataDragonUrl: https://ddragon.leagueoflegends.com/cdn/9.3.1/data/en_US/champion.json
+lolApiKey: ${LOL_APIKEY}
+rememberMe: test

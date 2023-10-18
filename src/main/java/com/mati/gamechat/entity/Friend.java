@@ -1,6 +1,6 @@
 package com.mati.gamechat.entity;
 
-import com.mati.gamechat.Region;
+import com.mati.gamechat.entity.lol.Region;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

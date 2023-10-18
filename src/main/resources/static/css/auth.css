@@ -2,27 +2,13 @@
     color: white;
 }
 
-.login-container{
-    margin-top: 5%;
-    margin-bottom: 5%;
+p{
+    /*max-width: 18rem;*/
+    font-size: 1rem;
 }
 
-.login-form{
-    padding: 9%;
-    margin: 10%;
-    background:#282726;
-    box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
-}
-
-.login-form h2{
-    text-align: center;
-    margin-bottom:10%;
-    color:#fff;
-}
-
-.form-group{
-    display: flex;
-    justify-content: center;
+label, input{
+    font-size: 20px;
 }
 
 .btnSubmit{
@@ -34,6 +20,7 @@
     border: none;
     border-radius: 1.5rem;
     padding:2%;
+    font-size: 20px;
 }
 
 .btnForgetPwd{

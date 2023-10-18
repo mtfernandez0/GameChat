@@ -49,15 +49,13 @@
                 </div>
             </div>
         </div>
-
-        <h4>LoL Profile</h4>
-
+        <p class="display-2">LoL Profile</p>
         <div class="row">
             <div class="col-lg-8">
                 <div class="card mb-4">
                     <div class="card-body">
                         <div class="row">
-                            <div id="lolprofile-not-exists" th:if="!${lolProfileExists}">
+                            <div id="lolprofile-not-exists" th:if="${user.lolStats == null}">
                                 <div class="edit-profile mb-3">
                                     <input type="text" class="form-control bg-dark" name="nickname" placeholder="nickname" aria-label="Nickname">
                                     <select class="form-select bg-dark" name="region" aria-label="region">
@@ -68,36 +66,39 @@
                                 </div>
                                 <button id="save-lol-profile" type="button" class="btn btn-primary">Save</button>
                             </div>
-                            <div id="lolprofile-exists" th:if="${lolProfileExists}">
+                            <div id="lolprofile-exists" th:if="${user.lolStats != null}">
                                 <form>
                                     <fieldset disabled>
                                         <div class="row">
                                             <div class="col">
-                                                <input type="text" class="bg-dark form-control" th:placeholder="${lolProfile.getNick()}">
+                                                <input type="text" class="bg-dark form-control" th:placeholder="${user.lolStats.nick}" aria-label="nick">
                                             </div>
                                             <div class="col">
-                                                <input type="text" class="bg-dark form-control" th:placeholder="${lolProfile.getRegion()}">
-                                            </div>
-                                            <div class="col">
-                                                <input type="text" class="bg-dark form-control" th:placeholder="${lolProfile.getTier()} + ' ' + ${lolProfile.getDivision()}">
-                                            </div>
-                                            <div class="col">
-                                                <input type="text" class="bg-dark form-control" th:placeholder="${lolProfile.getLp()} + ' LP'">
+                                                <input type="text" class="bg-dark form-control" th:placeholder="${user.lolStats.region}" aria-label="region">
                                             </div>
                                         </div>
-
-                                        </br>
-
                                         <div>
-                                            <h6 class="bg-dark">Top three champions played</h6>
+                                            <h6 class="bg-dark display-6">Top three champions played</h6>
                                         </div>
                                         <div class="row">
-                                            <div th:each="champion : ${lolProfile.getChampionNames()}" class="col">
+                                            <div th:each="champion : ${user.lolStats.championNames}" class="col">
                                                 <input type="text" class="bg-dark form-control" th:placeholder="${champion}">
                                             </div>
                                         </div>
+                                        <div class="row" th:each="queue : ${user.lolStats.lolQueueStats}">
+                                            <div class="row">
+                                                <input type="text" class="bg-dark form-control" th:placeholder="${queue.queueType.getQueueType()}" aria-label="queueType">
+                                            </div>
+                                            <div class="col">
+                                                <input type="text" class="bg-dark form-control" th:placeholder="${queue.tier + ' ' + queue.division}"
+                                                aria-label="division">
+                                            </div>
+                                            <div class="col">
+                                                <input type="text" class="bg-dark form-control" th:placeholder="${queue.lp} + ' LP'" aria-label="lp">
+                                            </div>
+                                        </div>
                                     </fieldset>
-                                    </br>
+                                    <br>
                                     <button type="button" class="btn btn-danger">Edit</button>
                                 </form>
                             </div>

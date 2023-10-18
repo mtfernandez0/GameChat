@@ -1,9 +1,9 @@
 package com.mati.gamechat.repository;
 
-import com.mati.gamechat.entity.lol.Champion;
+import com.mati.gamechat.entity.lol.LolQueueStats;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RedisChampionRepository extends CrudRepository<Champion, Long> {
+public interface LolQueueStatsRepository extends CrudRepository<LolQueueStats, Long> {
 }

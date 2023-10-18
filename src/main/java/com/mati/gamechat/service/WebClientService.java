@@ -3,11 +3,11 @@ package com.mati.gamechat.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mati.gamechat.Region;
+import com.mati.gamechat.entity.lol.Region;
 import com.mati.gamechat.dto.lolDto.ChampionMasteryIdDto;
 import com.mati.gamechat.dto.lolDto.LeagueEntryDTO;
 import com.mati.gamechat.dto.lolDto.SummonerDTO;
-import com.mati.gamechat.entity.Champion;
+import com.mati.gamechat.entity.lol.Champion;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatusCode;
@@ -44,7 +44,7 @@ public class WebClientService {
     }
 
     public SummonerDTO getMonoSummoner(String nickname,
-                                             Region region) throws HttpServerErrorException{
+                                       Region region) throws HttpServerErrorException{
 
         Mono<SummonerDTO> monoSummonerDto = client.get()
                 .uri(protocol + region + lolUrl + apiUrlSummoner + nickname)
@@ -64,7 +64,7 @@ public class WebClientService {
     }
 
     public Set<LeagueEntryDTO> getLeagueEntryMonoSet(String summonerId,
-                                                           Region region) throws HttpServerErrorException {
+                                                     Region region) throws HttpServerErrorException {
 
         Mono<Set<LeagueEntryDTO>> monoSet = client.get()
                 .uri(protocol + region + lolUrl + apiUrlLeague + summonerId)

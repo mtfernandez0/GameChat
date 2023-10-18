@@ -1,10 +1,9 @@
 package com.mati.gamechat.dto;
 
 import com.mati.gamechat.entity.User;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
-@Data @AllArgsConstructor
+@NoArgsConstructor @AllArgsConstructor @Getter @Setter
 public class UserDto {
     private String username;
     private String password;

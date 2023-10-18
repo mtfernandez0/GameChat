@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script th:src="@{/ajax.js}"></script>
+</head>
+<body>
+
+<form method="post" th:action="@{/addUser}">
+    <h2>User Form</h2>
+        <label for="name_friend">Name</label>
+        <input type="text" id="name_friend" name="name">
+
+        <label for="region_user">Region</label>
+        <input type="text" id="region_user" name="region">
+
+        <button type="submit">Add</button>
+    </form>
+
+    <div id="friendForm">
+        <form id="friendRequestForm" action="">
+            <h2>Friend Form</h2>
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name">
+
+            <label for="region_friend">Region</label>
+            <input type="text" id="region_friend" name="region">
+
+            <button id="sendFriendRequest" type="submit">Send</button>
+        </form>
+    </div>
+
+</body>
+</html>

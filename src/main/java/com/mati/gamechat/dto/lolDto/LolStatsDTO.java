@@ -1,7 +1,7 @@
 package com.mati.gamechat.dto.lolDto;
 
-import com.mati.gamechat.Region;
-import com.mati.gamechat.entity.LolStats;
+import com.mati.gamechat.entity.lol.Region;
+import com.mati.gamechat.entity.lol.LolQueueStats;
 import lombok.*;
 
 import java.util.List;
@@ -16,13 +16,10 @@ public class LolStatsDTO {
     private int lp;
     private List<String> championNames;
 
-    public LolStatsDTO lolStatsToLolStatsDTO(LolStats lolStats){
+    public LolStatsDTO lolStatsToLolStatsDTO(LolQueueStats lolStats){
         return LolStatsDTO.builder()
-                .nick(lolStats.getNick())
                 .tier(lolStats.getTier())
                 .division(lolStats.getDivision())
-                .region(lolStats.getRegion())
-                .lp(lolStats.getLp())
-                .championNames(lolStats.getChampionNames()).build();
+                .lp(lolStats.getLp()).build();
     }
 }

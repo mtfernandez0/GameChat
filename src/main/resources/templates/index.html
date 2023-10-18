@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>LOF</title>
+    <title>GameChat</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -22,127 +22,130 @@
     </script>
 </head>
 <body data-bs-theme="dark">
-<nav id="main-navbar" class="navbar bg-dark">
-    <div class="container-fluid">
-        <a id="title" class="navbar-brand">LOF</a>
+    <nav id="main-navbar" class="navbar bg-dark">
+        <div class="container-fluid">
+            <div class="d-flex flex-row justify-content-between w-100 m-2">
+                <p id="title" class="col-sm-4 display-6 m-0">GameChat</p>
 
-        <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
+                <form class="d-flex align-items-center col-sm-4">
+                    <input class="form-control me-2 text-black" id="searchPlayer" type="search"
+                           placeholder="player" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
 
-        <div class="login-registerBtn" th:if="!${authenticated}">
-            <a class="btn btn-secondary" th:href="@{/login}">Login</a>
-            <a class="btn btn-secondary" th:href="@{/register}">Register</a>
-        </div>
+                <div class="d-flex flex-row justify-content-end align-items-center gap-2 col-sm-4" th:if="${user == null}">
+                    <a class="btn btn-outline-light" th:href="@{/login}">Login</a>
+                    <a class="btn btn-outline-light" th:href="@{/register}">Register</a>
+                </div>
 
-        <div class="dropdown" th:if="${authenticated}">
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${username}">
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="/account">Account</a></li>
-                    <li><a class="dropdown-item" href="#">Settings</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><form th:action="@{/logout}" method="post">
-                        <label class="dropdown-item"><input hidden="hidden" type="submit"/>Logout</label>
-                    </form></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</nav>
-
-<div class="main-page">
-    <div class="sidebar dropdown-menu-dark">
-        <a class="dropdown-item" href="#">Matchmaking</a>
-        <div id="chat" class="list-unstyled ps-0">
-            <button class="dropdown-item btn btn-toggle align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
-                Chat
-            </button>
-            <div class="collapse" id="home-collapse">
-                <div class="chat-users btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li><a href="#" class="dropdown-item rounded">Chat 1</a></li>
-                    <li><a href="#" class="dropdown-item rounded">Chat 2</a></li>
-                    <li><a href="#" class="dropdown-item rounded">Chat 3</a></li>
+                <div class="dropdown" th:if="${user != null}">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="${user.username}">
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/account">Account</a></li>
+                            <li><a class="dropdown-item" href="#">Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form th:action="@{/logout}" method="post">
+                                    <label class="dropdown-item"><input hidden="hidden" type="submit"/>Logout</label>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-        <a class="dropdown-item" href="#">Friends</a>
-    </div>
+    </nav>
 
-    <div class="front-page">
-        <div class="inside-nav container-fluid navbar">
-
-            <div class="dropdown">
-                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-                    Filter
+    <div class="container-fluid bg-dark bg-gradient row py-2 m-0 px-0">
+        <div class="col-sm-3 sidebar dropdown-menu-dark">
+            <a class="dropdown-item" href="#">Matchmaking</a>
+            <div id="chat" class="list-unstyled ps-0">
+                <button class="dropdown-item btn btn-toggle align-items-center rounded" data-bs-toggle="collapse"
+                        data-bs-target="#home-collapse" aria-expanded="true">
+                    Chat
                 </button>
-                <form class="dropdown-menu p-4">
-                    <table>
-                        <tr>
-                            Tier
-                            <div class="mb-3">
-                                <input class="tier-checkbox" type="checkbox" id="tier1" name="tier" value="1">
-                                <label for="tier1">Tier I</label><br>
-                                <input class="tier-checkbox" type="checkbox" id="tier2" name="tier" value="2">
-                                <label for="tier2">Tier II</label><br>
-                                <input class="tier-checkbox" type="checkbox" id="tier3" name="tier" value="3">
-                                <label for="tier3">Tier III</label><br>
-                                <input class="tier-checkbox" type="checkbox" id="tier4" name="tier" value="4">
-                                <label for="tier4">Tier IV</label><br>
-                                <input class="tier-checkbox" type="checkbox" id="tier5" name="tier" value="5">
-                                <label for="tier5">Tier V</label><br>
-                                <input class="tier-checkbox" type="checkbox" id="tier6" name="tier" value="6">
-                                <label for="tier6">Tier VI</label><br>
-                                <input class="tier-checkbox" type="checkbox" id="tier7" name="tier" value="7">
-                                <label for="tier7">Tier VII</label><br>
-                                <input class="tier-checkbox" type="checkbox" id="tier8" name="tier" value="8">
-                                <label for="tier8">Tier VIII</label><br>
-                                <input class="tier-checkbox" type="checkbox" id="tier9" name="tier" value="9">
-                                <label for="tier9">Tier IX</label><br>
-                            </div>
-                        </tr>
-                        <tr>
-                            Division
-                            <div class="mb-3">
-                                <input type="checkbox" id="division1" name="division" value="1">
-                                <label for="division1">Division I</label><br>
-                                <input type="checkbox" id="division2" name="division" value="2">
-                                <label for="division2">Division II</label><br>
-                                <input type="checkbox" id="division3" name="division" value="3">
-                                <label for="division3">Division III</label><br>
-                                <input type="checkbox" id="division4" name="division" value="4">
-                                <label for="division4">Division IV</label><br>
-                            </div>
-                        </tr>
-                    </table>
-                </form>
+                <div class="collapse" id="home-collapse">
+                    <div class="chat-users btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                        <li><a href="#" class="dropdown-item rounded">Chat 1</a></li>
+                        <li><a href="#" class="dropdown-item rounded">Chat 2</a></li>
+                        <li><a href="#" class="dropdown-item rounded">Chat 3</a></li>
+                    </div>
+                </div>
             </div>
-            <button type="button" class="btn btn-success">Search</button>
+            <a class="dropdown-item" href="#">Friends</a>
         </div>
 
-        <div class="player-list">
-            <a class="player-matchmaking" href="#">
-                <div class="name-region"><h6>User 1 #LAS</h6></div>
-                <div class="tier-division-lp"><h6>Gold 1 / Division 4 / 46LP</h6></div>
-                <div class="name-region"><p>Looking for a sup, mid</p></div>
-            </a>
-            <a class="player-matchmaking" href="#">
-                <div class="name-region"><h6>User 2 #LAS</h6></div>
-                <div class="tier-division-lp"><h6>Platinum 3 / Division 4 / 26LP</h6></div>
-                <div class="name-region"><p>Looking for a top to fit in a group of 4</p></div>
-            </a>
-            <a class="player-matchmaking" href="#">
-                <div class="name-region"><h6>User 3 #NA</h6></div>
-                <div class="tier-division-lp"><h6>Diamond 2 / Division 1 / 78LP</h6></div>
-                <div class="name-region"><p>Playing only jungle</p></div>
-            </a>
+        <div class="col-sm-9">
+            <div class="inside-nav container-fluid navbar">
+
+                <div class="dropdown">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                        Filter
+                    </button>
+                    <form class="dropdown-menu p-4">
+                        <table>
+                            <tr>
+                                Tier
+                                <div class="mb-3">
+                                    <input class="tier-checkbox" type="checkbox" id="tier1" name="tier" value="1">
+                                    <label for="tier1">Tier I</label><br>
+                                    <input class="tier-checkbox" type="checkbox" id="tier2" name="tier" value="2">
+                                    <label for="tier2">Tier II</label><br>
+                                    <input class="tier-checkbox" type="checkbox" id="tier3" name="tier" value="3">
+                                    <label for="tier3">Tier III</label><br>
+                                    <input class="tier-checkbox" type="checkbox" id="tier4" name="tier" value="4">
+                                    <label for="tier4">Tier IV</label><br>
+                                    <input class="tier-checkbox" type="checkbox" id="tier5" name="tier" value="5">
+                                    <label for="tier5">Tier V</label><br>
+                                    <input class="tier-checkbox" type="checkbox" id="tier6" name="tier" value="6">
+                                    <label for="tier6">Tier VI</label><br>
+                                    <input class="tier-checkbox" type="checkbox" id="tier7" name="tier" value="7">
+                                    <label for="tier7">Tier VII</label><br>
+                                    <input class="tier-checkbox" type="checkbox" id="tier8" name="tier" value="8">
+                                    <label for="tier8">Tier VIII</label><br>
+                                    <input class="tier-checkbox" type="checkbox" id="tier9" name="tier" value="9">
+                                    <label for="tier9">Tier IX</label><br>
+                                </div>
+                            </tr>
+                            <tr>
+                                Division
+                                <div class="mb-3">
+                                    <input type="checkbox" id="division1" name="division" value="1">
+                                    <label for="division1">Division I</label><br>
+                                    <input type="checkbox" id="division2" name="division" value="2">
+                                    <label for="division2">Division II</label><br>
+                                    <input type="checkbox" id="division3" name="division" value="3">
+                                    <label for="division3">Division III</label><br>
+                                    <input type="checkbox" id="division4" name="division" value="4">
+                                    <label for="division4">Division IV</label><br>
+                                </div>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+                <button type="button" class="btn btn-success">Search</button>
+            </div>
+
+            <div class="player-list">
+                <a class="player-matchmaking" href="#">
+                    <div class="name-region"><h6>User 1 #LAS</h6></div>
+                    <div class="tier-division-lp"><h6>Gold 1 / Division 4 / 46LP</h6></div>
+                    <div class="name-region"><p>Looking for a sup, mid</p></div>
+                </a>
+                <a class="player-matchmaking" href="#">
+                    <div class="name-region"><h6>User 2 #LAS</h6></div>
+                    <div class="tier-division-lp"><h6>Platinum 3 / Division 4 / 26LP</h6></div>
+                    <div class="name-region"><p>Looking for a top to fit in a group of 4</p></div>
+                </a>
+                <a class="player-matchmaking" href="#">
+                    <div class="name-region"><h6>User 3 #NA</h6></div>
+                    <div class="tier-division-lp"><h6>Diamond 2 / Division 1 / 78LP</h6></div>
+                    <div class="name-region"><p>Playing only jungle</p></div>
+                </a>
+            </div>
         </div>
-
-
     </div>
-</div>
-
 </body>
 </html>

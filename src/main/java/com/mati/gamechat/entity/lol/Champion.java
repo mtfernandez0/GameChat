@@ -1,15 +1,13 @@
-package com.mati.gamechat.entity;
+package com.mati.gamechat.entity.lol;
 
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
 
 @RedisHash("champion")
-@Data @NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor @AllArgsConstructor @Getter @Setter
 public class Champion implements Serializable {
     @Id
     private Long id;

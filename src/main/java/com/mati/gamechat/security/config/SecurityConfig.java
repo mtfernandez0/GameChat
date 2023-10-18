@@ -1,16 +1,15 @@
 package com.mati.gamechat.security.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
@@ -23,18 +22,13 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    String[] resources = {"/css/**", "/img/**", "/favicon/**"};
-    private final CustomAuthenticationProvider authenticationProvider;
+    String[] resources = {"/css/**", "/img/**", "/favicon/**", "/webjars/**"};
     @Value("${rememberMe}")
     private String rememberMePrivateKey;
+    private final UserDetailsService userDetailsService;
 
-    public SecurityConfig(CustomAuthenticationProvider authenticationProvider) {
-        this.authenticationProvider = authenticationProvider;
-    }
-
-    @Autowired
-    void registerProvider(AuthenticationManagerBuilder auth) throws Exception{
-        auth.authenticationProvider(authenticationProvider);
+    public SecurityConfig(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
     }
 
     @Bean
@@ -43,11 +37,12 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests()
                     .requestMatchers(resources).permitAll()
-                    .requestMatchers("/login", "/register", "/").permitAll()
+                    .requestMatchers("/login", "/register", "/", "").permitAll()
                     .anyRequest().authenticated()
                     .and()
                 .formLogin()
-                    .loginPage("/login")
+                    .loginPage("/login").permitAll()
+                    .failureHandler(new CustomAuthFailureHandler())
                     .defaultSuccessUrl("/")
                     .and()
                 .rememberMe()
@@ -56,7 +51,7 @@ public class SecurityConfig {
                     .and()
                 .logout()
                     .logoutUrl("/logout").permitAll()
-                    .logoutSuccessUrl("/login")
+                    .logoutSuccessUrl("/")
                     .and()
                 .sessionManagement(session -> session.maximumSessions(1))
                 .httpBasic();
@@ -65,13 +60,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    RememberMeServices rememberMeServices(UserDetailsService userDetailsService) {
-        return new TokenBasedRememberMeServices(rememberMePrivateKey, userDetailsService);
+    public DaoAuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider dao = new DaoAuthenticationProvider();
+        dao.setPasswordEncoder(passwordEncoder());
+        dao.setUserDetailsService(userDetailsService);
+        return dao;
     }
 
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    RememberMeServices rememberMeServices(UserDetailsService userDetailsService) {
+        return new TokenBasedRememberMeServices(rememberMePrivateKey, userDetailsService);
     }
 
     @Bean
@@ -91,5 +89,10 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", config);
 
         return source;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

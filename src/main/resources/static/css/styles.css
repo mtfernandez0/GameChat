@@ -13,10 +13,6 @@
     grid-template-columns: 190px 1fr;
 }
 
-#title{
-    font-size: 30px;
-}
-
 #main-navbar{
     padding: 0;
 }
@@ -27,9 +23,6 @@
 }
 
 .sidebar{
-    padding-left: 5px;
-    font-size: 1.2rem;
-
     display: flex;
     flex-direction: column;
     font-size: 20px;
@@ -46,9 +39,12 @@
     font-size: 20px;
 }
 
-.front-page{
-    margin: 0 15px;
+#searchPlayer::-webkit-input-placeholder{
+    color: black;
+    opacity: 0.6;
+}
 
+.front-page{
     display: flex;
     flex-direction: column;
 }

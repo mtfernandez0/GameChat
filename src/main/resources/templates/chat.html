@@ -21,13 +21,22 @@
                 console.log("Subscribing to chat with the user: " + username)
                 stompClient.subscribe("/user/" + username, (res) => {
                     console.log("Response: " + res.body)
+                    let obj = JSON.parse(res.body)
+
+                    let requests = localStorage.getItem("requests")
+
+                    console.log(requests)
+
+                    const nextTo = document.getElementById("request")
+                    const waitingButton = '<button id="accept" type="button" class="btn btn-secondary">Button test</button>'
+                    nextTo.insertAdjacentHTML('afterend', waitingButton)
                 });
             })
             $('#request').on('click', () => {
                 let to = $("input[id='friendRequest']").val()
                 stompClient.send("/app/chat/" + to, {}, JSON.stringify({
                     idReceiver: 2,
-                    fromLogin: 1,
+                    idFrom: 1,
                     message: 'Hello from ' + username + ' to ' + to
                 }))
             })
