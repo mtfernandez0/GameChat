@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -56,6 +57,12 @@ public class User {
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private LolStats lolStats;
 
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+    private List<Group> groupsCreated = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "participants", fetch = FetchType.LAZY)
+    private List<Group> groupsInvolved = new ArrayList<>();
+
     @Column(nullable = false)
     private Date created_at;
 
@@ -71,5 +78,4 @@ public class User {
     private void onUpdate(){
         this.updated_at = new Date();
     }
-
 }

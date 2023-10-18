@@ -53,7 +53,9 @@ public class AccountController {
         return res;
     }
 
-    private void updateProfile(User user, String nickname, Region region) throws JsonProcessingException{
+    private void updateProfile(User user,
+                               String nickname,
+                               Region region) throws JsonProcessingException{
 
         SummonerDTO summonerDTO;
         Set<LeagueEntryDTO> leagueEntryDTOSet = null;

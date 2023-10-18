@@ -22,7 +22,7 @@ import java.util.Set;
 
 @Service
 public class WebClientService {
-    @Value("${apiTransmisionProtocol}")
+    @Value("${apiTransmissionProtocol}")
     private String protocol;
     @Value("${apiLolUrl}")
     private String lolUrl;
@@ -86,7 +86,7 @@ public class WebClientService {
     public List<Long> getChampionIds(String summonerId, Region region) throws HttpServerErrorException {
 
         List<ChampionMasteryIdDto> championIdsDto = client.get()
-                .uri(protocol + region + lolUrl + apiUrlChampions + summonerId + "/top")
+                .uri(protocol + region.name() + lolUrl + apiUrlChampions + summonerId)
                 .header("X-Riot-Token", lolApiKey)
                 .exchangeToMono(clientResponse -> {
                     if (clientResponse.statusCode().is5xxServerError())
@@ -99,8 +99,9 @@ public class WebClientService {
                 }).block();
 
         List<Long> ids = new ArrayList<>();
-        for (ChampionMasteryIdDto championMasteryIdDto : championIdsDto) {
-            ids.add(championMasteryIdDto.getChampionId());
+
+        for (int i = 0; i < Math.min(3, championIdsDto.size()) ; i++) {
+            ids.add(championIdsDto.get(i).getChampionId());
         }
 
         return ids;

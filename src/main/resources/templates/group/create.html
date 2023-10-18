@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.0/css/bootstrap.min.css">
+    <script src="/webjars/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+    <title>Create Group</title>
+</head>
+<body>
+    <form th:action="@{/group/create}" method="post" th:object="${group}">
+        <label for="name"></label>
+        <input type="text" id="name" th:value="${name}">
+
+        <label for="description"></label>
+        <input type="text" id="description" th:value="${description}">
+
+        <label for="date_to_play"></label>
+        <input type="datetime-local" id="date_to_play" th:value="${date_to_play}">
+
+        <input type="submit" value="Create">
+    </form>
+</body>
+</html>
