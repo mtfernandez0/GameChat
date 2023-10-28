@@ -22,7 +22,8 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    String[] resources = {"/css/**", "/img/**", "/favicon/**", "/webjars/**"};
+    String[] resources = {"/css/**", "/img/**", "/favicon/**", "/webjars/**", "/js/**"};
+
     @Value("${rememberMe}")
     private String rememberMePrivateKey;
     private final UserDetailsService userDetailsService;
@@ -33,11 +34,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.cors().and()
+        http/*.cors().and()*/
                 .csrf().disable()
                 .authorizeHttpRequests()
                     .requestMatchers(resources).permitAll()
-                    .requestMatchers("/login", "/register", "/", "").permitAll()
+                    .requestMatchers("/login", "/register").permitAll()
                     .anyRequest().authenticated()
                     .and()
                 .formLogin()
@@ -51,7 +52,6 @@ public class SecurityConfig {
                     .and()
                 .logout()
                     .logoutUrl("/logout").permitAll()
-                    .logoutSuccessUrl("/")
                     .and()
                 .sessionManagement(session -> session.maximumSessions(1))
                 .httpBasic();
@@ -72,7 +72,7 @@ public class SecurityConfig {
         return new TokenBasedRememberMeServices(rememberMePrivateKey, userDetailsService);
     }
 
-    @Bean
+/*    @Bean
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOriginPatterns(List.of(
@@ -89,7 +89,7 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", config);
 
         return source;
-    }
+    }*/
 
     @Bean
     public PasswordEncoder passwordEncoder() {

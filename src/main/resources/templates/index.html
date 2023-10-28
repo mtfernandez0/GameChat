@@ -21,7 +21,9 @@
         })
     </script>
 </head>
-<body data-bs-theme="dark">
+<body data-bs-theme="dark" onload="connect()">
+    <div id="userDto" th:data-user="${userDto}"></div>
+
     <nav id="main-navbar" class="navbar bg-dark">
         <div class="container-fluid">
             <div class="d-flex flex-row justify-content-between w-100 m-2">
@@ -61,16 +63,17 @@
     <div class="container-fluid bg-dark bg-gradient row py-2 m-0 px-0">
         <div class="col-sm-3 sidebar dropdown-menu-dark">
             <a class="dropdown-item" href="#">Matchmaking</a>
-            <div id="chat" class="list-unstyled ps-0">
-                <button class="dropdown-item btn btn-toggle align-items-center rounded" data-bs-toggle="collapse"
-                        data-bs-target="#home-collapse" aria-expanded="true">
-                    Chat
+            <div id="chat" class="list-unstyled ps-0" th:if="${user != null}">
+                <button id="groups-name-dropdown" class="dropdown-item btn btn-toggle align-items-center rounded"
+                        data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+                    Groups
                 </button>
                 <div class="collapse" id="home-collapse">
-                    <div class="chat-users btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                        <li><a href="#" class="dropdown-item rounded">Chat 1</a></li>
-                        <li><a href="#" class="dropdown-item rounded">Chat 2</a></li>
-                        <li><a href="#" class="dropdown-item rounded">Chat 3</a></li>
+                    <div id="groups-item-dropdown" class="chat-users btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                        <li th:each="group : ${user.groupsInvolved}" th:id="'group-item-' + ${group.id}">
+                            <a th:href="@{/group/{groupId}(groupId=${group.id})}"
+                               class="dropdown-item rounded" th:text="${group.owner.username}"></a>
+                        </li>
                     </div>
                 </div>
             </div>
@@ -80,7 +83,8 @@
             <div class="inside-nav container-fluid navbar">
 
                 <div class="dropdown">
-                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+                            data-bs-auto-close="outside">
                         Filter
                     </button>
                     <form class="dropdown-menu p-4">
@@ -128,23 +132,13 @@
             </div>
 
             <div class="player-list">
-                <a class="player-matchmaking" href="#">
-                    <div class="name-region"><h6>User 1 #LAS</h6></div>
-                    <div class="tier-division-lp"><h6>Gold 1 / Division 4 / 46LP</h6></div>
-                    <div class="name-region"><p>Looking for a sup, mid</p></div>
-                </a>
-                <a class="player-matchmaking" href="#">
-                    <div class="name-region"><h6>User 2 #LAS</h6></div>
-                    <div class="tier-division-lp"><h6>Platinum 3 / Division 4 / 26LP</h6></div>
-                    <div class="name-region"><p>Looking for a top to fit in a group of 4</p></div>
-                </a>
-                <a class="player-matchmaking" href="#">
-                    <div class="name-region"><h6>User 3 #NA</h6></div>
-                    <div class="tier-division-lp"><h6>Diamond 2 / Division 1 / 78LP</h6></div>
-                    <div class="name-region"><p>Playing only jungle</p></div>
-                </a>
+                <div th:insert="~{fragments/lol/group :: groupCard(groups = ${groups}, user = ${user})}"></div>
             </div>
         </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="/js/socket-connect.js"></script>
 </body>
 </html>

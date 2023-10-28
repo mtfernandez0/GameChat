@@ -21,3 +21,5 @@ apiUrlSummoner: /summoner/v4/summoners/by-name/
 dataDragonUrl: https://ddragon.leagueoflegends.com/cdn/9.3.1/data/en_US/champion.json
 lolApiKey: ${LOL_APIKEY}
 rememberMe: test
+
+maxGroupsNumberPerUser: 1

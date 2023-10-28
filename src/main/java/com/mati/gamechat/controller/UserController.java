@@ -1,43 +1,135 @@
 package com.mati.gamechat.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.mati.gamechat.entity.lol.LolStats;
+import com.mati.gamechat.entity.lol.QueueType;
+import com.mati.gamechat.entity.lol.Region;
+import com.mati.gamechat.dto.lolDto.LeagueEntryDTO;
+import com.mati.gamechat.dto.lolDto.SummonerDTO;
+import com.mati.gamechat.entity.lol.LolQueueStats;
 import com.mati.gamechat.entity.User;
+import com.mati.gamechat.service.lol.LolQueueStatsService;
+import com.mati.gamechat.service.lol.LolStatsService;
 import com.mati.gamechat.service.UserService;
-import org.springframework.security.core.context.SecurityContextHolder;
+import com.mati.gamechat.service.WebClientLolService;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.security.Principal;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
-@CrossOrigin
+@Log4j2
 public class UserController {
+
+    private final WebClientLolService webClientLolService;
+    private final LolStatsService lolStatsService;
+    private final LolQueueStatsService lolQueueStatsService;
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    public UserController(WebClientLolService webClientLolService,
+                          LolStatsService lolStatsService,
+                          LolQueueStatsService lolQueueStatsService,
+                          UserService userService) {
+        this.webClientLolService = webClientLolService;
+        this.lolStatsService = lolStatsService;
+        this.lolQueueStatsService = lolQueueStatsService;
         this.userService = userService;
     }
 
-    @GetMapping(value = {"", "/"})
-    public String index(Model model, Principal principal){
-        User user = null;
+    private long getDifference(Date from, Date to){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        long res = 0;
+        try{
+            long diff = sdf.parse(to.toString()).getTime() - sdf.parse(from.toString()).getTime();
+            res = (diff / (1000 * 60 * 60 * 24)) % 365;
+        } catch (Exception ignore) {}
 
-        if (principal != null) user = userService.findByUsername(principal.getName());
-
-        model.addAttribute("user", user);
-        return "index";
+        return res;
     }
 
-    @GetMapping("/chat")
-    public String chat(Model model){
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    private void updateProfile(User user,
+                               String nickname,
+                               Region region) throws JsonProcessingException{
 
-        if (username.equals("anonymousUser")){
-            model.addAttribute("authenticated", false);
-        } else {
-            model.addAttribute("authenticated", true);
-            model.addAttribute("username", username);
+        SummonerDTO summonerDTO;
+        Set<LeagueEntryDTO> leagueEntryDTOSet = null;
+        LolStats lolStats = new LolStats();
+
+        try {
+            summonerDTO = webClientLolService.getMonoSummoner(nickname, region);
+            lolStats = LolStats.builder()
+                    .nick(nickname)
+                    .region(region)
+                    .user(user)
+                    .championNames(webClientLolService.getTopChampionNames(summonerDTO.getId(), region))
+                    .build();
+            leagueEntryDTOSet = webClientLolService.getLeagueEntryMonoSet(summonerDTO.getId(), region);
+        } catch (HttpServerErrorException ignore){}
+
+        if (user.getLolStats() != null && user.getLolStats().getLolQueueStats() != null)
+            for (LolQueueStats lolQueueStats : user.getLolStats().getLolQueueStats())
+                lolQueueStatsService.deleteById(lolQueueStats.getId());
+
+        lolStats.setLolQueueStats(new ArrayList<>());
+
+        if (user.getLolStats() != null) lolStats.setId(user.getLolStats().getId());
+
+        lolStats = lolStatsService.save(lolStats);
+
+        for (LeagueEntryDTO l: Objects.requireNonNull(leagueEntryDTOSet)) {
+            try {
+                QueueType queueType = QueueType.findCorrectOne(l.getQueueType());
+                LolQueueStats lolQueueStats = l.leagueEntryDTOtoLolStats(user, queueType);
+                lolQueueStats.setLolStats(lolStats);
+                lolQueueStatsService.save(lolQueueStats);
+            } catch (IllegalArgumentException ignored){}
         }
-        return "chat";
+
+        user.setLolStats(lolStatsService.save(lolStats));
+        userService.save(user);
+    }
+
+    @GetMapping("/account")
+    public String account(Model model,
+                          Principal principal) throws JsonProcessingException {
+
+        User user = userService.findByUsername(principal.getName());
+        model.addAttribute("user", user);
+
+        if (user.getLolStats() != null && getDifference(user.getUpdated_at(), new Date()) > 0)
+            updateProfile(user, user.getLolStats().getNick(), user.getLolStats().getRegion());
+
+        return "account";
+    }
+
+    @PostMapping("/saveLolProfile")
+    public ResponseEntity<?> saveLolProfile(@RequestParam("nickname") String nickname,
+                                            @RequestParam("region") Region region,
+                                            Principal principal) throws JsonProcessingException {
+        User user = userService.findByUsername(principal.getName());
+
+        if (Objects.nonNull(user.getLolStats()))
+            return ResponseEntity.badRequest().build();
+
+        updateProfile(user, nickname, region);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/editLolProfile")
+    public ResponseEntity<?> editLolProfile(){
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/registration/{userId}")
+    public ResponseEntity<Void> registrationUser(@PathVariable Long userId) throws Exception{
+        userService.findById(userId);
+        return ResponseEntity.ok().build();
     }
 }

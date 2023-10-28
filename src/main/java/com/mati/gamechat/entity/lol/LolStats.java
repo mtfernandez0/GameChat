@@ -1,5 +1,7 @@
 package com.mati.gamechat.entity.lol;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.mati.gamechat.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Table(name = "lol_stats")
 @NoArgsConstructor @AllArgsConstructor @Getter @Setter
 @Builder
@@ -21,6 +24,7 @@ public class LolStats {
 
     @Enumerated(EnumType.STRING)
     private Region region;
+
     @ElementCollection
     private List<String> championNames;
 

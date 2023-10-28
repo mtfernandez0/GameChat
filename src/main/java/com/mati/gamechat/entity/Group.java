@@ -1,5 +1,8 @@
 package com.mati.gamechat.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,10 +12,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Table(name = "groups")
 @NoArgsConstructor @AllArgsConstructor @Getter @Setter
 public class Group {
@@ -22,24 +27,25 @@ public class Group {
     private Long id;
 
     @NotNull
-    @NotBlank
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private PlayTime playTime;
 
     @NotNull
-    @Size(max = 300, message = "The description must have less than 300 characters.")
-    private String description;
+    @Enumerated(EnumType.STRING)
+    private Game game;
 
     @NotNull
-    private Date date_to_play;
+    @Enumerated(EnumType.STRING)
+    private PlayStyle playStyle;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User owner;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-    List<User> participants;
+    private List<User> participants;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    List<Comment> comments;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Comment> comments;
 }

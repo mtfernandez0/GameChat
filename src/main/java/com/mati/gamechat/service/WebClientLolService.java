@@ -8,6 +8,7 @@ import com.mati.gamechat.dto.lolDto.ChampionMasteryIdDto;
 import com.mati.gamechat.dto.lolDto.LeagueEntryDTO;
 import com.mati.gamechat.dto.lolDto.SummonerDTO;
 import com.mati.gamechat.entity.lol.Champion;
+import com.mati.gamechat.service.lol.ChampionService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatusCode;
@@ -20,8 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Service in charge of connecting to the RiotAPI.
+ */
 @Service
-public class WebClientService {
+public class WebClientLolService {
     @Value("${apiTransmissionProtocol}")
     private String protocol;
     @Value("${apiLolUrl}")
@@ -36,9 +40,11 @@ public class WebClientService {
     private String apiUrlChampions;
     @Value("${dataDragonUrl}")
     private String dDragonUrl;
+
     private final WebClient client;
     private final ChampionService championService;
-    public WebClientService(ChampionService championService){
+
+    public WebClientLolService(ChampionService championService){
         this.championService = championService;
         client = WebClient.create();
     }

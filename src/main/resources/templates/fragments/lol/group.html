@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.0/css/bootstrap.min.css">
+    <script src="/webjars/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+    <title></title>
+</head>
+<body>
+    <div th:fragment="groupCard(groups, user)">
+        <th:block th:each="group : ${groups}" th:switch="${group.game.name()}">
+            <div th:case="'LOL'" class="player-matchmaking" th:id="${'group-'+group.id}">
+                <div class="name-region">
+                    <h6 th:text="${group.owner.lolStats.nick + ' #' + group.owner.lolStats.region}"></h6>
+                    <div th:if="${group.owner.lolStats != null}" th:each="lolStat : ${group.owner.lolStats.lolQueueStats}">
+                            <span th:text="${lolStat.queueType.queueType+': '+lolStat.tier+' '+lolStat.division+' / '+lolStat.lp+' LP'}">
+                            </span>
+                    </div>
+                    <span th:if="${group.owner.lolStats.lolQueueStats.size() == 0}">
+                            Unranked
+                        </span>
+                </div>
+                <span class="participants" th:text="${group.participants.size() + '/5'}"></span>
+                <p th:text="${group.playStyle.displayPlayStyle+' at '+group.playTime.displayPlayTime.toLowerCase()}"></p>
+                <div th:if="${user != null && !group.owner.equals(user)}">
+                    <button th:id="${'group-btn-' + group.id}" th:onclick="'join('+${group.id}+')'"
+                            th:if="${!group.participants.contains(user)}" class="btn btn-outline-success">Join</button>
+                    <button th:id="${'group-btn-' + group.id}" th:onclick="'leave('+${group.id}+')'"
+                            th:if="${group.participants.contains(user)}" class="btn btn-outline-danger">Leave</button>
+                </div>
+            </div>
+        </th:block>
+    </div>
+</body>
+</html>

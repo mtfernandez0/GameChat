@@ -1,5 +1,9 @@
 package com.mati.gamechat.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.mati.gamechat.entity.lol.LolStats;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -13,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Table(name = "tb_user")
 @NoArgsConstructor @AllArgsConstructor @Getter @Setter
 @Builder
@@ -23,7 +28,6 @@ public class User {
 
     @NotBlank(message = "Please fill this field")
     @Size(min = 4, max = 25, message = "Username must be between 4 and 25 characters")
-//    @Pattern(regexp = "")
     private String username;
 
     @NotBlank(message = "Please fill this field")
@@ -32,10 +36,12 @@ public class User {
 
     @Size(min = 8, max = 64, message = "Password must be between 8 and 64 characters")
     @NotBlank(message = "Please fill this field")
+    @JsonIgnore
     private String password;
 
     @Transient
     @NotBlank(message = "Please fill this field")
+    @JsonIgnore
     private String passwordConfirmation;
 
     @ManyToMany(fetch = FetchType.LAZY)

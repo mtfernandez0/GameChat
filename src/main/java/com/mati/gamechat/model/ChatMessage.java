@@ -1,15 +1,29 @@
 package com.mati.gamechat.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@AllArgsConstructor @NoArgsConstructor
+import java.time.LocalTime;
+
+@NoArgsConstructor @AllArgsConstructor @Getter
+@Setter
 @Builder
 public class ChatMessage {
-    private Long idReceiver;
-    private Long IdFrom;
-    private String message;
+
+    private String content;
+
+    private String sender;
+
+    private LocalTime localTime;
+
+    private MessageType messageType;
+
+    @Override
+    public String toString() {
+        return "ChatMessage{" +
+                "content='" + content + '\'' +
+                ", sender='" + sender + '\'' +
+                ", localTime=" + localTime +
+                ", messageType=" + messageType +
+                '}';
+    }
 }

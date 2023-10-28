@@ -8,15 +8,31 @@
 </head>
 <body>
     <form th:action="@{/group/create}" method="post" th:object="${group}">
-        <label for="name"></label>
-        <input type="text" id="name" th:value="${name}">
 
-        <label for="description"></label>
-        <input type="text" id="description" th:value="${description}">
-
-        <label for="date_to_play"></label>
-        <input type="datetime-local" id="date_to_play" th:value="${date_to_play}">
-
+        <div th:if="${#fields.hasAnyErrors()}">
+            <ul>
+                <li th:each="err : ${#fields.allErrors()}" th:text="${err}" />
+            </ul>
+        </div>
+        <label for="game">Game</label>
+        <select id="game" name="game">
+            <option th:each="game : ${games}"
+                    th:value="${game}" th:text="${game.displayValue}"></option>
+        </select>
+        <br>
+        <label for="playTime">Playtime</label>
+        <select id="playTime" name="playTime">
+            <option th:each="playtime : ${playtimes}"
+                    th:value="${playtime}"
+                    th:text="${playtime.displayPlayTime}"></option>
+        </select>
+        <br>
+        <span th:each="style : ${playstyles}">
+            <label th:for="${style.name()}" th:text="${style.displayPlayStyle}"></label>
+            <input type="radio" name="playStyle" th:id="${style.name()}"
+            th:value="${style}">
+        </span>
+        <br>
         <input type="submit" value="Create">
     </form>
 </body>

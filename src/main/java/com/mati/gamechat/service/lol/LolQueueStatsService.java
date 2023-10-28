@@ -1,4 +1,4 @@
-package com.mati.gamechat.service;
+package com.mati.gamechat.service.lol;
 
 import com.mati.gamechat.entity.lol.LolQueueStats;
 import com.mati.gamechat.repository.LolQueueStatsRepository;

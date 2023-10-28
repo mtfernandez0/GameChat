@@ -2,10 +2,10 @@ package com.mati.gamechat.model;
 
 import lombok.*;
 
-@Data
-@AllArgsConstructor @NoArgsConstructor
+
+@AllArgsConstructor @NoArgsConstructor @Getter @Setter
+@Builder
 public class Message {
-    private Long idReceiver;
-    private Long idFrom;
-    private String message;
+    private Long from;
+    private String text;
 }

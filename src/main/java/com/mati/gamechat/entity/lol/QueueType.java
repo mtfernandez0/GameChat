@@ -1,9 +1,8 @@
 package com.mati.gamechat.entity.lol;
 
 public enum QueueType {
-    RANKED_SOLO_5x5("Ranked Solo 5x5"),
-    RANKED_FLEX_SR("Ranked Flex SR"),
-    RANKED_FLEX_TT("Ranked Flex TT");
+    RANKED_SOLO_5x5("Ranked"),
+    RANKED_FLEX_SR("Flex");
 
     private final String queueType;
 
