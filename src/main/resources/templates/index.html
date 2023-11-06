@@ -8,18 +8,6 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
-    <script>
-        $(document).ready(function () {
-            var limit = 3;
-            $('input.tier-checkbox').on('change', function(evt) {
-                console.log("Entered")
-                if($(this).siblings(':checked').length >= limit) {
-                    this.checked = false;
-                    alert("Checkbox limit is 3!")
-                }
-            });
-        })
-    </script>
 </head>
 <body data-bs-theme="dark" onload="connect()">
     <div id="userDto" th:data-user="${userDto}"></div>
@@ -81,53 +69,6 @@
 
         <div class="col-sm-9">
             <div class="inside-nav container-fluid navbar">
-
-                <div class="dropdown">
-                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
-                            data-bs-auto-close="outside">
-                        Filter
-                    </button>
-                    <form class="dropdown-menu p-4">
-                        <table>
-                            <tr>
-                                Tier
-                                <div class="mb-3">
-                                    <input class="tier-checkbox" type="checkbox" id="tier1" name="tier" value="1">
-                                    <label for="tier1">Tier I</label><br>
-                                    <input class="tier-checkbox" type="checkbox" id="tier2" name="tier" value="2">
-                                    <label for="tier2">Tier II</label><br>
-                                    <input class="tier-checkbox" type="checkbox" id="tier3" name="tier" value="3">
-                                    <label for="tier3">Tier III</label><br>
-                                    <input class="tier-checkbox" type="checkbox" id="tier4" name="tier" value="4">
-                                    <label for="tier4">Tier IV</label><br>
-                                    <input class="tier-checkbox" type="checkbox" id="tier5" name="tier" value="5">
-                                    <label for="tier5">Tier V</label><br>
-                                    <input class="tier-checkbox" type="checkbox" id="tier6" name="tier" value="6">
-                                    <label for="tier6">Tier VI</label><br>
-                                    <input class="tier-checkbox" type="checkbox" id="tier7" name="tier" value="7">
-                                    <label for="tier7">Tier VII</label><br>
-                                    <input class="tier-checkbox" type="checkbox" id="tier8" name="tier" value="8">
-                                    <label for="tier8">Tier VIII</label><br>
-                                    <input class="tier-checkbox" type="checkbox" id="tier9" name="tier" value="9">
-                                    <label for="tier9">Tier IX</label><br>
-                                </div>
-                            </tr>
-                            <tr>
-                                Division
-                                <div class="mb-3">
-                                    <input type="checkbox" id="division1" name="division" value="1">
-                                    <label for="division1">Division I</label><br>
-                                    <input type="checkbox" id="division2" name="division" value="2">
-                                    <label for="division2">Division II</label><br>
-                                    <input type="checkbox" id="division3" name="division" value="3">
-                                    <label for="division3">Division III</label><br>
-                                    <input type="checkbox" id="division4" name="division" value="4">
-                                    <label for="division4">Division IV</label><br>
-                                </div>
-                            </tr>
-                        </table>
-                    </form>
-                </div>
                 <button type="button" class="btn btn-success">Search</button>
             </div>
 

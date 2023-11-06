@@ -29,7 +29,7 @@
                     </div>
                 </div>
             </form>
-            <button onclick="leave()" class="btn btn-outline-danger">Leave</button>
+            <button th:if="${group.owner.id != user.id}" onclick="leaveChat()" class="btn btn-outline-danger">Leave</button>
         </div>
     </div>
 

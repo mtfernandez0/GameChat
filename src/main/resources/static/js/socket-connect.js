@@ -46,6 +46,7 @@ function customButton(type, groupId){
 }
 
 function onMessageReceived(payload){
+
     var message = JSON.parse(payload.body);
 
     let button = document.getElementById('group-btn-' + message.groupId);

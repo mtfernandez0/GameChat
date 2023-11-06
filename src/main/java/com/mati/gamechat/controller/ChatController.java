@@ -14,9 +14,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.security.Principal;
 import java.time.LocalTime;
@@ -33,21 +30,6 @@ public class ChatController {
                           UserService userService) {
         this.groupService = groupService;
         this.userService = userService;
-    }
-
-    @GetMapping("/group/{groupId}")
-    public String chat(@PathVariable Long groupId,
-                       Model model,
-                       Principal principal){
-
-        Group group = groupService.findById(groupId);
-
-        if (group == null) return "redirect:/";
-
-        model.addAttribute("group", group);
-        model.addAttribute("user", userService.findByUsername(principal.getName()));
-
-        return "chat/index";
     }
 
     @MessageMapping("/chat.sendMessage/{groupId}")

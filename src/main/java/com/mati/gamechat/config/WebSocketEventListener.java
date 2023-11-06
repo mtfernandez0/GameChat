@@ -11,13 +11,13 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import java.time.LocalTime;
 import java.util.Objects;
 
-@Component
-@RequiredArgsConstructor
+/*@Component
+@RequiredArgsConstructor*/
 public class WebSocketEventListener {
 
-    private final SimpMessageSendingOperations messageTemplate;
+/*    private final SimpMessageSendingOperations messageTemplate;*/
 
-    @EventListener
+/*    @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event){
 
         String username = Objects.requireNonNull(event.getUser()).getName();
@@ -32,5 +32,5 @@ public class WebSocketEventListener {
 
             messageTemplate.convertAndSend("/topic/public", chatMessage);
         }
-    }
+    }*/
 }

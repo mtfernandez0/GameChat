@@ -20,8 +20,6 @@ function connect(groupID){
     groupId = groupID;
     username = document.getElementById('username').getAttribute('data-username');
 
-    console.log(username);
-
     let socket = new SockJS('/chat');
     stompClient = Stomp.over(socket);
 
@@ -30,26 +28,11 @@ function connect(groupID){
 
 function onConnect(){
     // subscribe to the public Topic
-    stompClient.subscribe('/topic/public/' + groupId, onMessageReceived);
-
-    // tell username to the server
-    stompClient.send('/app/chat.addUser/' + groupId,
-        {},
-        JSON.stringify({ sender: username, messageType: 'JOIN'})
-    );
+    stompClient.subscribe('/topic/public/' + groupId, onMessageReceived, { id: groupId});
+    stompClient.subscribe('/topic/public', generalLeave);
 
     connectingElement.classList.add('hidden');
 }
-
-function leave(groupId){
-/*
-    let groupItem = document.getElementById('group-item-' + groupId);
-*/
-
-    //unsubscribe
-    stompClient.unsubscribe('/topic/public/' + groupId);
-}
-
 
 function onError(){
     connectingElement.textContent = "Could not connect to WebSocket Server. Please refresh the page.";
@@ -78,8 +61,28 @@ function sendMessage(event){
 }
 
 function onMessageReceived(payload) {
-    var message = JSON.parse(payload.body);
 
+    var message = JSON.parse(payload.body);
+    let button = document.getElementById('group-btn-' + message.groupId);
+    let group = document.getElementById('group-' + message.groupId);
+
+    if (button && group) showNotification(message, button, group);
+    else showMessage(message);
+}
+
+function updateDropdown(message){
+
+    if (message.messageType === 'LEAVE')
+        document.getElementById('group-item-'+message.groupId).remove();
+    else if (message.messageType === 'JOIN')
+        addGroupDropdownItem(message.group_owner, message.groupId);
+}
+
+function showNotification(){
+    console.log("Show notification method");
+}
+
+function showMessage(message){
     var messageElement = document.createElement('li');
 
     if(message.messageType === 'JOIN') {
@@ -114,6 +117,18 @@ function onMessageReceived(payload) {
     messageArea.scrollTop = messageArea.scrollHeight;
 }
 
+function generalLeave(message, button, group){
+
+    if (message.username === user.username && button){
+
+        button.replaceWith(customButton(message.messageType, message.groupId));
+        updateDropdown(message);
+    }
+
+    if(group)
+        group.querySelector('.participants').innerText = message.group_size+'/5';
+}
+
 function getAvatarColor(messageSender) {
     var hash = 0;
     for (var i = 0; i < messageSender.length; i++) {
@@ -121,6 +136,15 @@ function getAvatarColor(messageSender) {
     }
     var index = Math.abs(hash % colors.length);
     return colors[index];
+}
+
+function leaveChat(){
+    if (confirm("Are you sure you want to leave this group?")) {
+        stompClient.send(
+            '/app/chat.leave/'+groupId,
+            {}
+        )
+    }
 }
 
 messageForm.addEventListener('submit', sendMessage, true);

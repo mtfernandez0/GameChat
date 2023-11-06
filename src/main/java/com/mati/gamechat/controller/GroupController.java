@@ -34,6 +34,21 @@ public class GroupController {
         this.userService = userService;
     }
 
+    @GetMapping("/{groupId}")
+    public String groupChat(@PathVariable Long groupId,
+                       Model model,
+                       Principal principal){
+
+        Group group = groupService.findById(groupId);
+
+        if (group == null) return "redirect:/";
+
+        model.addAttribute("group", group);
+        model.addAttribute("user", userService.findByUsername(principal.getName()));
+
+        return "chat/index";
+    }
+
     @GetMapping("/create")
     public String newGroup(@ModelAttribute("group") Group group,
                            Model model,
